@@ -78,4 +78,11 @@ public class Mitarbeiter
       this.strasse = strasse;
    }
 
+   @Override
+   public String toString()
+   {
+      return "Mitarbeiter [vorname=" + vorname + ", nachname=" + nachname + ", plz=" + plz
+            + ", ort=" + ort + ", strasse=" + strasse + "]";
+   }
+
 }

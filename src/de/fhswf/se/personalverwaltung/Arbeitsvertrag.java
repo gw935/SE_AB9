@@ -1,41 +1,40 @@
 package de.fhswf.se.personalverwaltung;
 
-import java.sql.Date;
-
 public class Arbeitsvertrag
 {
 
-   /**
-    * Beginn des Arbeitsvertrages Date(int year, int month, int date)
-    */
-   private Date beginn;
+   private String beginn;
 
-   /**
-    * Ende eines Arbeitsvertrages Date(int year, int month, int date)
-    */
-   private Date ende;
+   private String ende;
 
    /**
     * Woechentliche Stunden einer Arbeitskraft
     */
    private double woechentlicheStunden;
 
-   public Date getBeginn()
+   public Arbeitsvertrag(String beginn, String ende, double woechentlicheStunden)
+   {
+      this.beginn = beginn;
+      this.ende = ende;
+      this.woechentlicheStunden = woechentlicheStunden;
+   }
+
+   public String getBeginn()
    {
       return this.beginn;
    }
 
-   public void setBeginn(Date beginn)
+   public void setBeginn(String beginn)
    {
       this.beginn = beginn;
    }
 
-   public Date getEnde()
+   public String getEnde()
    {
       return this.ende;
    }
 
-   public void setEnde(Date ende)
+   public void setEnde(String ende)
    {
       this.ende = ende;
    }
@@ -48,6 +47,13 @@ public class Arbeitsvertrag
    public void setWoechentlicheStunden(double woechentlicheStunden)
    {
       this.woechentlicheStunden = woechentlicheStunden;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Arbeitsvertrag:\nBeginn: " + getBeginn() + " Ende: " + getEnde()
+            + " woechentliche Stunden: " + getWoechentlicheStunden() + "\n";
    }
 
 }
