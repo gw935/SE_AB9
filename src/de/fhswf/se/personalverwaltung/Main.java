@@ -1,19 +1,33 @@
 package de.fhswf.se.personalverwaltung;
 
-import java.sql.Date;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main
 {
+   static final String DATABASE_URL = "jdbc:mysql://localhost/se9";
+
    public static void main(String[] args)
    {
       Main main = new Main();
       main.control();
    }
 
-   private List<Mitarbeiter> mitarbeiter;
+   private Connection connection;
+
+   private Statement statement;
+
+   private ResultSet resultset;
+
+   private List<Angestellte> angestellte;
+
+   private List<Hilfskraft> hilfskraefte;
 
    private boolean isRunning = false;
 
@@ -21,10 +35,74 @@ public class Main
 
    public Main()
    {
-      mitarbeiter = new ArrayList<Mitarbeiter>();
+      connection = null;
+      statement = null;
+      resultset = null;
+
+      angestellte = new ArrayList<Angestellte>();
+      hilfskraefte = new ArrayList<Hilfskraft>();
+
+      getDBData(connection, statement, resultset);
+
       scanner = new Scanner(System.in);
 
       isRunning = true;
+   }
+
+   private void getDBData(Connection connection, Statement statement, ResultSet resultset)
+   {
+      System.out.println("Lese Daten von der Datenbank.");
+      try
+      {
+         connection = DriverManager.getConnection(DATABASE_URL, "root", "");
+         statement = connection.createStatement();
+
+         // Angestellte von der Datenbank holen und zu der Liste hinzufuegen
+         resultset = statement.executeQuery("SELECT * FROM angestellte");
+         while (resultset.next())
+         {
+            angestellte.add(
+                  new Angestellte(resultset.getString("vorname"), resultset.getString("nachname"),
+                        resultset.getString("plz"), resultset.getString("ort"),
+                        resultset.getString("strasse"), resultset.getString("eintrittsdatum")));
+         }
+
+         // Hilfskraefte von der Datenbank holen und zu der Liste hinzufuegen
+         resultset = statement.executeQuery("SELECT * FROM hilfskraefte");
+         while (resultset.next())
+         {
+            hilfskraefte.add(
+                  new Hilfskraft(resultset.getString("vorname"), resultset.getString("nachname"),
+                        resultset.getString("plz"), resultset.getString("ort"),
+                        resultset.getString("strasse"), resultset.getString("matrNr")));
+         }
+         // Arbeitsvertraege
+         resultset = statement.executeQuery("SELECT * FROM arbeitsvertraege");
+         while (resultset.next())
+         {
+            String matrNr = resultset.getString("matrNr");
+
+            String beginn = resultset.getString("beginn");
+
+            String ende = resultset.getString("ende");
+
+            double woechentlicheStunden = resultset.getDouble("woechentlicheStunden");
+
+            for (Hilfskraft h : hilfskraefte)
+            {
+               if (h.getMatrNr().equals(matrNr))
+               {
+                  h.addArbeitsvertrag(
+                        new Arbeitsvertrag(matrNr, beginn, ende, woechentlicheStunden));
+               }
+            }
+         }
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+         System.out.println("Probleme bei SQL.");
+      }
    }
 
    public void control()
@@ -42,9 +120,13 @@ public class Main
                break;
             case "einsehen":
                System.out.println("Anzeigen aller Mitarbeiter:");
-               for (Mitarbeiter m : mitarbeiter)
+               for (Angestellte a : angestellte)
                {
-                  System.out.println(m.toString());
+                  System.out.println(a.toString());
+               }
+               for (Hilfskraft h : hilfskraefte)
+               {
+                  System.out.println(h.toString());
                }
                break;
             case "beenden":
@@ -62,11 +144,21 @@ public class Main
    private void erstelleMitarbeiter()
    {
       boolean falscheEingabe = false;
+      try
+      {
+         connection = DriverManager.getConnection(DATABASE_URL, "root", "");
+         statement = connection.createStatement();
+      }
+      catch (SQLException e2)
+      {
+         e2.printStackTrace();
+         System.out.println("Probleme bei SQL.");
+      }
       while (!falscheEingabe)
       {
-         System.out.println("Was soll erstellt werden? \n\"angestellter\" oder \"hilfskraft\"?");
+         System.out.println("Was soll erstellt werden? \n\"angestellte\" oder \"hilfskraft\"?");
          String aktion = scanner.nextLine();
-         if (aktion.equals("angestellter"))
+         if (aktion.equals("angestellte"))
          {
             boolean falschesDatum = false;
             String vorname;
@@ -74,7 +166,7 @@ public class Main
             String plz;
             String ort;
             String strasse;
-            String eintritsdatum;
+            String eintrittsdatum;
             System.out.println("Bitte geben Sie die Folgenden Daten ein:");
             System.out.println("Vorname: ");
             vorname = scanner.nextLine();
@@ -87,9 +179,24 @@ public class Main
             System.out.println("Strasse: ");
             strasse = scanner.nextLine();
             System.out.println("Eintritsdatum: ");
-            eintritsdatum = scanner.nextLine();
+            eintrittsdatum = scanner.nextLine();
 
-            mitarbeiter.add(new Angestellte(vorname, nachname, plz, ort, strasse, eintritsdatum));
+            angestellte.add(new Angestellte(vorname, nachname, plz, ort, strasse, eintrittsdatum));
+
+            // Speichern des Angestellten in Datenbank
+            try
+            {
+               statement.executeUpdate(
+                     "INSERT INTO angestellte(vorname, nachname, plz, ort, strasse, eintrittsdatum) VALUES('"
+                           + vorname + "','" + nachname + "','" + plz + "','" + ort + "','"
+                           + strasse + "','" + eintrittsdatum + "');");
+            }
+            catch (SQLException e)
+            {
+               e.printStackTrace();
+               System.out.println("Probleme beim eintragen in die Datenbank.");
+            }
+
             System.out.println("Angestellter wurde erstellt.");
 
             falscheEingabe = true;
@@ -118,6 +225,19 @@ public class Main
             matrNr = scanner.nextLine();
 
             Hilfskraft hilfskraft = new Hilfskraft(vorname, nachname, plz, ort, strasse, matrNr);
+            // Speichern der Hilfskraft in Datenbank
+            try
+            {
+               statement.executeUpdate(
+                     "INSERT INTO hilfskraefte(vorname, nachname, plz, ort, strasse, matrNr) VALUES('"
+                           + vorname + "','" + nachname + "','" + plz + "','" + ort + "','"
+                           + strasse + "','" + matrNr + " ')");
+            }
+            catch (SQLException e1)
+            {
+               e1.printStackTrace();
+               System.out.println("Probleme beim eintragen in die Datenbank.");
+            }
 
             boolean mehrVertraege = true;
             while (mehrVertraege)
@@ -141,7 +261,21 @@ public class Main
                   System.out.println("Falsche eingabe. Woechentliche Stunden sind 0.");
                }
 
-               hilfskraft.addArbeitsvertrag(new Arbeitsvertrag(beginn, ende, woechentlicheStunden));
+               hilfskraft.addArbeitsvertrag(
+                     new Arbeitsvertrag(matrNr, beginn, ende, woechentlicheStunden));
+               // Speichern des Arbeitsvertrags in Datenbank
+               try
+               {
+                  statement.executeUpdate(
+                        "INSERT INTO arbeitsvertraege(matrNr, beginn, ende, woechentlicheStunden) VALUES('"
+                              + matrNr + "','" + beginn + "','" + ende + "','"
+                              + woechentlicheStunden + " ')");
+               }
+               catch (SQLException e1)
+               {
+                  e1.printStackTrace();
+                  System.out.println("Probleme beim eintragen in die Datenbank.");
+               }
 
                System.out.println("Wollen Sie einen weiteren Arbeitsvertrag erstellen?");
                System.out.println("j fuer Ja und alles andere fuer nein");
@@ -154,7 +288,7 @@ public class Main
                   mehrVertraege = false;
                }
             }
-            mitarbeiter.add(hilfskraft);
+            hilfskraefte.add(hilfskraft);
             System.out.println("Angestellter wurde erstellt.");
 
             falscheEingabe = true;

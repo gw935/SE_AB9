@@ -2,18 +2,17 @@ package de.fhswf.se.personalverwaltung;
 
 public class Arbeitsvertrag
 {
+   private String matrNr;
 
    private String beginn;
 
    private String ende;
 
-   /**
-    * Woechentliche Stunden einer Arbeitskraft
-    */
    private double woechentlicheStunden;
 
-   public Arbeitsvertrag(String beginn, String ende, double woechentlicheStunden)
+   public Arbeitsvertrag(String matrNr, String beginn, String ende, double woechentlicheStunden)
    {
+      this.matrNr = matrNr;
       this.beginn = beginn;
       this.ende = ende;
       this.woechentlicheStunden = woechentlicheStunden;
@@ -47,6 +46,16 @@ public class Arbeitsvertrag
    public void setWoechentlicheStunden(double woechentlicheStunden)
    {
       this.woechentlicheStunden = woechentlicheStunden;
+   }
+
+   public String getMatrNr()
+   {
+      return matrNr;
+   }
+
+   public void setMatrNr(String matrNr)
+   {
+      this.matrNr = matrNr;
    }
 
    @Override

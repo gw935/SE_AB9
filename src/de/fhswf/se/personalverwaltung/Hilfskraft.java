@@ -74,6 +74,7 @@ public class Hilfskraft extends Mitarbeiter
 
       return temp;
    }
+   
 
    /* (non-Javadoc)
     * @see java.lang.Object#toString()

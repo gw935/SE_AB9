@@ -1,7 +1,5 @@
 package de.fhswf.se.personalverwaltung;
 
-import java.sql.Date;
-
 public class Angestellte extends Mitarbeiter
 {
    private String eintrittsdatum;
