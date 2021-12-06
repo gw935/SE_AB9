@@ -1,9 +1,11 @@
 package de.fhswf.se.projektverwaltung;
 
+import java.util.Arrays;
+
 public class Projekt
 {
 
-   Ansprechpartner ansprechpartner;
+   private Ansprechpartner ansprechpartner;
 
    /**
     * Teilnehmende Studenten
@@ -59,7 +61,12 @@ public class Projekt
     * Projektstatus eines Projektes, 4 St�ck: ~ angenommen, abgelehnt,
     * Erg�nzung notwendig, Status offen
     */
-   private String projektStatus;
+   private String projektStatus = "Offen";
+
+   public Projekt(String projektTitel)
+   {
+      this.projektTitel = projektTitel;
+   }
 
    public Student[] getTeilnehmer()
    {
@@ -169,6 +176,28 @@ public class Projekt
    public void setProjektStatus(String projektStatus)
    {
       this.projektStatus = projektStatus;
+   }
+
+   public Ansprechpartner getAnsprechpartner()
+   {
+      return ansprechpartner;
+   }
+
+   public void setAnsprechpartner(Ansprechpartner ansprechpartner)
+   {
+      this.ansprechpartner = ansprechpartner;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Projekt [ansprechpartner=" + ansprechpartner + ", \nteilnehmer="
+            + Arrays.toString(teilnehmer) + ", \ndozentEmail=" + dozentEmail
+            + ", \nlehrveranstaltung=" + lehrveranstaltung + ", \nprojektTitel=" + projektTitel
+            + ", \nkurzeSkizze=" + kurzeSkizze + ", \nkurzeBeschreibung=" + kurzeBeschreibung
+            + ", \ngenauereBeschreibung=" + genauereBeschreibung + ", \ntermin1=" + termin1
+            + ", \ntermin2=" + termin2 + ", \nkommentar=" + kommentar + ", \nprojektStatus="
+            + projektStatus + "]";
    }
 
 }

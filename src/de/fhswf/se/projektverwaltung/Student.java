@@ -2,10 +2,6 @@ package de.fhswf.se.projektverwaltung;
 
 public class Student
 {
-
-   /**
-    * Email-Adresse eines Studenten
-    */
    private String email;
 
    public String getEmail()
@@ -16,6 +12,17 @@ public class Student
    public void setEmail(String email)
    {
       this.email = email;
+   }
+
+   public Student(String email)
+   {
+      this.email = email;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Student [email=" + email + "]";
    }
 
 }

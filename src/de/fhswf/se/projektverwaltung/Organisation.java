@@ -15,6 +15,12 @@ public class Organisation
     */
    private ArrayList ansprechpartner;
 
+   public Organisation(String name)
+   {
+      this.name = name;
+      ansprechpartner = new ArrayList<>();
+   }
+
    public String getName()
    {
       return this.name;
@@ -33,6 +39,17 @@ public class Organisation
    public void setAnsprechpartner(ArrayList ansprechpartner)
    {
       this.ansprechpartner = ansprechpartner;
+   }
+
+   public void addAnsprechpartner(Ansprechpartner a)
+   {
+      ansprechpartner.add(a);
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Organisation [name=" + name + ", ansprechpartner=" + ansprechpartner + "]";
    }
 
 }
