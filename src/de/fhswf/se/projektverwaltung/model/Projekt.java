@@ -1,4 +1,4 @@
-package de.fhswf.se.projektverwaltung;
+package de.fhswf.se.projektverwaltung.model;
 
 import java.util.Arrays;
 
@@ -41,16 +41,6 @@ public class Projekt
     * genauere Beschreibung des Projektes
     */
    private String genauereBeschreibung;
-
-   /**
-    * erster Termin des Projektes
-    */
-   private String termin1;
-
-   /**
-    * zweiter Termin des Projektes
-    */
-   private String termin2;
 
    /**
     * Kommentar des Projektes
@@ -138,26 +128,6 @@ public class Projekt
       this.genauereBeschreibung = genauereBeschreibung;
    }
 
-   public String getTermin1()
-   {
-      return this.termin1;
-   }
-
-   public void setTermin1(String termin1)
-   {
-      this.termin1 = termin1;
-   }
-
-   public String getTermin2()
-   {
-      return this.termin2;
-   }
-
-   public void setTermin2(String termin2)
-   {
-      this.termin2 = termin2;
-   }
-
    public String getKommentar()
    {
       return this.kommentar;
@@ -195,9 +165,8 @@ public class Projekt
             + Arrays.toString(teilnehmer) + ", \ndozentEmail=" + dozentEmail
             + ", \nlehrveranstaltung=" + lehrveranstaltung + ", \nprojektTitel=" + projektTitel
             + ", \nkurzeSkizze=" + kurzeSkizze + ", \nkurzeBeschreibung=" + kurzeBeschreibung
-            + ", \ngenauereBeschreibung=" + genauereBeschreibung + ", \ntermin1=" + termin1
-            + ", \ntermin2=" + termin2 + ", \nkommentar=" + kommentar + ", \nprojektStatus="
-            + projektStatus + "]";
+            + ", \ngenauereBeschreibung=" + genauereBeschreibung + ", \nkommentar=" + kommentar
+            + ", \nprojektStatus=" + projektStatus + "]";
    }
 
 }

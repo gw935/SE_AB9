@@ -1,4 +1,4 @@
-package de.fhswf.se.projektverwaltung;
+package de.fhswf.se.projektverwaltung.model;
 
 public class Student
 {

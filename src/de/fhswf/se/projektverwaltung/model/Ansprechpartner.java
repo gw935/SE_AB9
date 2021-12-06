@@ -1,16 +1,16 @@
-package de.fhswf.se.projektverwaltung;
+package de.fhswf.se.projektverwaltung.model;
 
 public class Ansprechpartner
 {
 
-   private String organisation;
+   private Organisation organisation;
 
    /**
     * Email eines Ansprechpartners
     */
    private String email;
 
-   public Ansprechpartner(String email, String organisation)
+   public Ansprechpartner(String email, Organisation organisation)
    {
       this.email = email;
       this.organisation = organisation;
@@ -26,12 +26,12 @@ public class Ansprechpartner
       this.email = email;
    }
 
-   public String getOrganisation()
+   public Organisation getOrganisation()
    {
       return organisation;
    }
 
-   public void setOrganisation(String organisation)
+   public void setOrganisation(Organisation organisation)
    {
       this.organisation = organisation;
    }
